@@ -84,6 +84,9 @@ def test_taxi_trips_benchmark(
 
     # Do some basic sanity checks.
     assert result
+    print("hi will")
+    print(result)
+    print("~~~~~")
     assert result.success
     assert len(result.run_results) == number_of_tables
     if write_data_docs:
