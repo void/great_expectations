@@ -42,14 +42,16 @@ stages:
             inputs:
               secureFile: 'superconductive-service-acct.json'
               retryCount: '2'
-
+          - script: |
+              mkdir -p junit
+              displayName: 'mkdir junit'
           - script: |
               pip install pytest-azurepipelines
               pip freeze > pip-freeze.txt
-              mkdir -p junit
-              pytest -v $(test_script) \
+              pytest -vv $(test_script) \
                 $(extra_args) \
                 --bigquery \
+                --junitxml=junit/test-results.xml \
                 --no-spark --no-postgresql --napoleon-docstrings --cov=. --cov-report=xml --cov-report=html \
                 --ignore=tests/cli --ignore=tests/integration/usage_statistics
 
