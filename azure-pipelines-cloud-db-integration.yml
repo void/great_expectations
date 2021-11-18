@@ -13,7 +13,7 @@ stages:
           matrix:
             performance:
               test_script: 'tests/performance/test_bigquery_benchmarks.py'
-              extra_args: '--bigquery --performance-tests --no-spark --no-postgresql --benchmark-json=junit/benchmark.json -k test_taxi_trips_benchmark[1-True] '
+              extra_args: '--bigquery --performance-tests --no-spark --no-postgresql --benchmark-json=junit/benchmark.json -k test_taxi_trips_benchmark[1-True-V3] '
             # expectations_cfe:
             #   test_script: 'tests/test_definitions/test_expectations_cfe.py'
             #   extra_args: ''
@@ -42,13 +42,11 @@ stages:
             inputs:
               secureFile: 'superconductive-service-acct.json'
               retryCount: '2'
-          - script: |
-              mkdir -p junit
 
-            displayName: 'mkdir junit'
           - script: |
               pip install pytest-azurepipelines
               pip freeze > pip-freeze.txt
+              mkdir -p junit
               pytest -vv $(test_script) \
                 $(extra_args) \
                 --bigquery \
