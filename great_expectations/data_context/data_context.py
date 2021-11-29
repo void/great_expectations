@@ -49,13 +49,15 @@ from great_expectations.core.usage_statistics.anonymizers.datasource_anonymizer 
 from great_expectations.core.usage_statistics.anonymizers.store_anonymizer import (
     StoreAnonymizer,
 )
+from great_expectations.core.usage_statistics.send_usage_message import (
+    send_usage_message,
+)
 from great_expectations.core.usage_statistics.usage_statistics import (
     UsageStatisticsHandler,
     add_datasource_usage_statistics,
     get_batch_list_usage_statistics,
     run_validation_operator_usage_statistics,
     save_expectation_suite_usage_statistics,
-    send_usage_message,
     usage_statistics_enabled_method,
 )
 from great_expectations.core.util import nested_update
@@ -2088,6 +2090,7 @@ class BaseDataContext:
         expectation_suite: ExpectationSuite = ExpectationSuite(
             expectation_suite_name=expectation_suite_name
         )
+        # if the usage_stats has been enabled then we add it to the suite too
         if self.ge_cloud_mode:
             key: GeCloudIdentifier = GeCloudIdentifier(
                 resource_type="expectation_suite", ge_cloud_id=ge_cloud_id
@@ -2110,8 +2113,12 @@ class BaseDataContext:
                         expectation_suite_name
                     )
                 )
+        # how do you then serialize it?
 
         self.expectations_store.set(key, expectation_suite, **kwargs)
+
+        if self._usage_statistics_handler:
+            expectation_suite.add_usage_stats_handler(self._usage_statistics_handler)
         return expectation_suite
 
     def delete_expectation_suite(
@@ -2166,7 +2173,15 @@ class BaseDataContext:
             )
 
         if self.expectations_store.has_key(key):
-            return self.expectations_store.get(key)
+            expectation_suite: ExpectationSuite = self.expectations_store.get(key)
+            # TODO : THIS NEEDS TO BE TESTED
+            # if usage_stats are enabled, then we want to be able to associate the handler with the ExpectationSuite
+            if self._usage_statistics_handler:
+                expectation_suite.add_usage_stats_handler(
+                    self._usage_statistics_handler
+                )
+            return expectation_suite
+
         else:
             raise ge_exceptions.DataContextError(
                 "expectation_suite %s not found" % expectation_suite_name

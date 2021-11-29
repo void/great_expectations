@@ -16,6 +16,19 @@ GE_EXPECTATION_TYPES = set(v2_batchkwargs_api_supported_expectation_types).union
     set(v3_batchrequest_api_supported_expectation_types)
 )
 
+# # Legacy Datasources (<= v0.12 v2 BatchKwargs API)
+#         if self.is_parent_class_recognized_v2_api(config=config) is not None:
+#             self.anonymize_object_info(
+#                 anonymized_info_dict=anonymized_info_dict,
+#                 ge_classes=self._legacy_ge_classes,
+#                 object_config=config,
+#             )
+#         # Datasources (>= v0.13 v3 BatchRequest API), and custom v2 BatchKwargs API
+#         elif self.is_parent_class_recognized_v3_api(config=config) is not None:
+#             self.anonymize_object_info(
+#
+#                 # we want to handle the V2 and V3 differently
+
 
 class ExpectationSuiteAnonymizer(Anonymizer):
     def __init__(self, salt=None):

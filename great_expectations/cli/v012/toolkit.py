@@ -19,7 +19,7 @@ from great_expectations.cli.v012.util import cli_colorize_string, cli_message
 from great_expectations.core.batch import Batch
 from great_expectations.core.expectation_suite import ExpectationSuite
 from great_expectations.core.id_dict import BatchKwargs
-from great_expectations.core.usage_statistics.usage_statistics import (
+from great_expectations.core.usage_statistics.send_usage_message import (
     send_usage_message as send_usage_stats_message,
 )
 from great_expectations.data_asset import DataAsset

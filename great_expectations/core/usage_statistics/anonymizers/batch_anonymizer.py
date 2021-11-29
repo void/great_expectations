@@ -2,7 +2,6 @@ from great_expectations.core.usage_statistics.anonymizers.anonymizer import Anon
 from great_expectations.core.usage_statistics.anonymizers.batch_kwargs_anonymizer import (
     BatchKwargsAnonymizer,
 )
-from great_expectations.data_asset import DataAsset
 
 
 class BatchAnonymizer(Anonymizer):
@@ -11,6 +10,9 @@ class BatchAnonymizer(Anonymizer):
         self._batch_kwargs_anonymizer = BatchKwargsAnonymizer(salt=salt)
 
     def anonymize_batch_info(self, batch):
+        # <Will> Importing here temporarily until we can get rid of cicular import
+        from great_expectations.data_asset import DataAsset
+
         batch_kwargs = {}
         expectation_suite_name = ""
         datasource_name = ""

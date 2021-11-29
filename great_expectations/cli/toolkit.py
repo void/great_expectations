@@ -17,7 +17,7 @@ from great_expectations.cli.pretty_printing import cli_colorize_string, cli_mess
 from great_expectations.cli.upgrade_helpers import GE_UPGRADE_HELPER_VERSION_MAP
 from great_expectations.core.batch import BatchRequest
 from great_expectations.core.expectation_suite import ExpectationSuite
-from great_expectations.core.usage_statistics.usage_statistics import (
+from great_expectations.core.usage_statistics.send_usage_message import (
     send_usage_message as send_usage_stats_message,
 )
 from great_expectations.data_context.data_context import DataContext

@@ -15,6 +15,13 @@ from great_expectations.core.expectation_configuration import (
     ExpectationConfigurationSchema,
     expectationConfigurationSchema,
 )
+
+# from great_expectations.core.usage_statistics.anonymizers.expectation_suite_anonymizer import ExpectationSuiteAnonymizer
+from great_expectations.core.usage_statistics.send_usage_message import (
+    send_usage_message_with_handler as send_usage_stats_message,
+)
+
+# from great_expectations.core.usage_statistics.usage_statistics import usage_statistics_enabled_method, add_expectation_usage_statistics
 from great_expectations.core.util import (
     convert_to_json_serializable,
     ensure_json_serializable,
@@ -56,6 +63,7 @@ class ExpectationSuite(SerializableDictDot):
         execution_engine_type=None,
         meta=None,
         ge_cloud_id=None,
+        usage_stats_handler=None,
     ):
         self.expectation_suite_name = expectation_suite_name
         self.ge_cloud_id = ge_cloud_id
@@ -72,6 +80,9 @@ class ExpectationSuite(SerializableDictDot):
         self.evaluation_parameters = evaluation_parameters
         self.data_asset_type = data_asset_type
         self.execution_engine_type = execution_engine_type
+
+        # we have to add a version of the handler here
+        self.usage_stats_handler = usage_stats_handler
         if meta is None:
             meta = {"great_expectations_version": ge_version}
         if (
@@ -150,6 +161,10 @@ class ExpectationSuite(SerializableDictDot):
                 for (mine, theirs) in zip(self.expectations, other.expectations)
             ]
         )
+
+    # how do you add information about the handler?
+    def add_usage_stats_handler(self, usage_stats_handler):
+        self.usage_stats_handler = usage_stats_handler
 
     def __eq__(self, other):
         """ExpectationSuite equality ignores instance identity, relying only on properties."""
@@ -520,11 +535,24 @@ class ExpectationSuite(SerializableDictDot):
             More than one match
             One match if overwrite_existing = False
         """
+        usage_stats_event_name: str = "expectation_suite.add_expectation"
+        usage_stats_event_payload: Dict[str, Union[str, List[str]]] = {}
+
         found_expectation_indexes = self.find_expectation_indexes(
             expectation_configuration, match_type
         )
 
         if len(found_expectation_indexes) > 1:
+
+            usage_stats_event_payload: dict = {
+                "diagnostic_info": ["__value_error__"],
+            }
+            send_usage_stats_message(
+                handler=self.usage_stats_handler,
+                event=usage_stats_event_name,
+                event_payload=usage_stats_event_payload,
+                success=False,
+            )
             raise ValueError(
                 "More than one matching expectation was found. Please be more specific with your search "
                 "criteria"
@@ -554,7 +582,16 @@ class ExpectationSuite(SerializableDictDot):
                 )
         else:
             self.append_expectation(expectation_configuration)
-
+        # this is the usage_stats_payload
+        usage_stats_event_payload: dict = {
+            "diagnostic_info": "????",
+        }
+        send_usage_stats_message(
+            handler=self.usage_stats_handler,
+            event=usage_stats_event_name,
+            event_payload=usage_stats_event_payload,
+            success=False,
+        )
         return expectation_configuration
 
     def get_grouped_and_ordered_expectations_by_column(
@@ -597,6 +634,7 @@ class ExpectationSuite(SerializableDictDot):
             return expectations_by_column, sorted_columns
 
 
+# how does any of this work?
 class ExpectationSuiteSchema(Schema):
     expectation_suite_name = fields.Str()
     ge_cloud_id = fields.UUID(required=False, allow_none=True)
