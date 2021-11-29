@@ -15,6 +15,7 @@ import jsonschema
 import requests
 
 from great_expectations import __version__ as ge_version
+from great_expectations.core import ExpectationSuite
 from great_expectations.core.usage_statistics.anonymizers.anonymizer import Anonymizer
 from great_expectations.core.usage_statistics.anonymizers.batch_anonymizer import (
     BatchAnonymizer,
@@ -31,10 +32,9 @@ from great_expectations.core.usage_statistics.anonymizers.datasource_anonymizer 
 from great_expectations.core.usage_statistics.anonymizers.execution_engine_anonymizer import (
     ExecutionEngineAnonymizer,
 )
-
-# from great_expectations.core.usage_statistics.anonymizers.expectation_suite_anonymizer import (
-#     ExpectationSuiteAnonymizer,
-# )
+from great_expectations.core.usage_statistics.anonymizers.expectation_suite_anonymizer import (
+    ExpectationSuiteAnonymizer,
+)
 from great_expectations.core.usage_statistics.anonymizers.store_anonymizer import (
     StoreAnonymizer,
 )
@@ -74,7 +74,7 @@ class UsageStatisticsHandler:
         self._data_docs_sites_anonymizer = DataDocsSiteAnonymizer(data_context_id)
         self._batch_request_anonymizer = BatchRequestAnonymizer(data_context_id)
         self._batch_anonymizer = BatchAnonymizer(data_context_id)
-        # self._expectation_suite_anonymizer = ExpectationSuiteAnonymizer(data_context_id)
+        self._expectation_suite_anonymizer = ExpectationSuiteAnonymizer(data_context_id)
         try:
             self._sigterm_handler = signal.signal(signal.SIGTERM, self._teardown)
         except ValueError:
@@ -369,8 +369,6 @@ def save_expectation_suite_usage_statistics(
     expectation_suite_name=None,
     **kwargs,
 ):
-    from great_expectations.core import ExpectationSuite
-
     try:
         data_context_id = data_context.data_context_id
     except AttributeError:
@@ -422,10 +420,6 @@ def edit_expectation_suite_usage_statistics(data_context, expectation_suite_name
         )
 
     return payload
-
-
-def add_expectation_usage_statistics(**kwargs):
-    print("omg this worked")
 
 
 def add_datasource_usage_statistics(data_context, name, **kwargs):

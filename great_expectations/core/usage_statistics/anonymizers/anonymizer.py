@@ -2,7 +2,7 @@ import logging
 from hashlib import md5
 from typing import Optional
 
-import great_expectations.util as ge_util
+from great_expectations.util import load_class
 
 logger = logging.getLogger(__name__)
 
@@ -48,7 +48,7 @@ class Anonymizer:
             elif object_class is None and object_config is not None:
                 object_class_name = object_config.get("class_name")
                 object_module_name = object_config.get("module_name")
-                object_class = ge_util.load_class(object_class_name, object_module_name)
+                object_class = load_class(object_class_name, object_module_name)
             object_class_name = object_class.__name__
 
             for ge_class in ge_classes:
@@ -93,7 +93,7 @@ class Anonymizer:
             elif object_class is None and object_config is not None:
                 object_class_name = object_config.get("class_name")
                 object_module_name = object_config.get("module_name")
-                object_class = ge_util.load_class(object_class_name, object_module_name)
+                object_class = load_class(object_class_name, object_module_name)
 
             for class_to_check in classes_to_check:
                 if issubclass(object_class, class_to_check):

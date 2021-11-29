@@ -9,6 +9,7 @@ from great_expectations.core.id_dict import BatchKwargs, BatchSpec, IDDict
 from great_expectations.core.util import convert_to_json_serializable
 from great_expectations.exceptions import InvalidBatchIdError
 from great_expectations.types import SerializableDictDot
+from great_expectations.util import filter_properties_dict
 from great_expectations.validator.metric_configuration import MetricConfiguration
 
 logger = logging.getLogger(__name__)
@@ -225,9 +226,6 @@ class BatchRequestBase(SerializableDictDot):
         return self._batch_spec_passthrough
 
     def to_json_dict(self) -> dict:
-        # <WILL> Lazy loading for circular import
-        from great_expectations.util import filter_properties_dict
-
         data_connector_query: Optional[dict] = None
         if self.data_connector_query is not None:
             data_connector_query = copy.deepcopy(self.data_connector_query)

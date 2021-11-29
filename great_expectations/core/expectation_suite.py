@@ -15,13 +15,9 @@ from great_expectations.core.expectation_configuration import (
     ExpectationConfigurationSchema,
     expectationConfigurationSchema,
 )
-
-# from great_expectations.core.usage_statistics.anonymizers.expectation_suite_anonymizer import ExpectationSuiteAnonymizer
 from great_expectations.core.usage_statistics.send_usage_message import (
     send_usage_message_with_handler as send_usage_stats_message,
 )
-
-# from great_expectations.core.usage_statistics.usage_statistics import usage_statistics_enabled_method, add_expectation_usage_statistics
 from great_expectations.core.util import (
     convert_to_json_serializable,
     ensure_json_serializable,
