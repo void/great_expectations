@@ -1659,6 +1659,9 @@ set as active.
             if isinstance(expectation_suite, dict):
                 expectation_suite = expectationSuiteSchema.load(expectation_suite)
             else:
+                # drop the Usage Stats Handler
+                if hasattr(expectation_suite, "usage_stats_handler"):
+                    expectation_suite.usage_stats_handler = None
                 expectation_suite = copy.deepcopy(expectation_suite)
             self._expectation_suite = expectation_suite
 

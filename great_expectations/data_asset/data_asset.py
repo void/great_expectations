@@ -365,7 +365,10 @@ class DataAsset:
             if isinstance(expectation_suite, dict):
                 expectation_suite = expectationSuiteSchema.load(expectation_suite)
             else:
+                # remove usage_stats here
+                expectation_suite.usage_stats_handler = None
                 expectation_suite = copy.deepcopy(expectation_suite)
+            # add it back here
             self._expectation_suite = expectation_suite
 
             if expectation_suite_name is not None:

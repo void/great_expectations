@@ -1711,6 +1711,7 @@ class BaseDataContext:
             raise ValueError(
                 f"Exactly one of expectation_suite_name,{'expectation_suite_ge_cloud_id,' if self.ge_cloud_mode else ''} expectation_suite, or create_expectation_suite_with_name must be specified"
             )
+        print("marker")
 
         if expectation_suite_ge_cloud_id is not None:
             expectation_suite = self.get_expectation_suite(
@@ -2256,9 +2257,16 @@ class BaseDataContext:
                         expectation_suite_name
                     )
                 )
-
+        # think about things here : Serialization here... so that handle the situation where we pass in the ExpectationSuite object directly (with usage_stats_handler)
+        # hi will
         self._evaluation_parameter_dependencies_compiled = False
-        return self.expectations_store.set(key, expectation_suite, **kwargs)
+        expectation_suite.usage_stats_handler = None
+        expectation_suite_to_return = self.expectations_store.set(
+            key, expectation_suite, **kwargs
+        )
+        # TODO : add the usage handler again
+        return expectation_suite_to_return
+        # retrive it  : and ... add usage_stats_handler
 
     def _store_metrics(self, requested_metrics, validation_results, target_store_name):
         """
