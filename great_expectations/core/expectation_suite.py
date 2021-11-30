@@ -188,6 +188,8 @@ class ExpectationSuite(SerializableDictDot):
         return json.dumps(self.to_json_dict(), indent=2)
 
     def to_json_dict(self):
+        # remove this before trying to represent as JSON
+        self.usage_stats_handler = None
         myself = expectationSuiteSchema.dump(self)
         # NOTE - JPC - 20191031: migrate to expectation-specific schemas that subclass result with properly-typed
         # schemas to get serialization all-the-way down via dump
