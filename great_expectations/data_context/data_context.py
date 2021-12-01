@@ -2086,8 +2086,9 @@ class BaseDataContext:
             raise ValueError("Parameter overwrite_existing must be of type BOOL")
 
         expectation_suite: ExpectationSuite = ExpectationSuite(
-            expectation_suite_name=expectation_suite_name
+            expectation_suite_name=expectation_suite_name, data_context=self
         )
+        # are we setting things correctly?
         if self.ge_cloud_mode:
             key: GeCloudIdentifier = GeCloudIdentifier(
                 resource_type="expectation_suite", ge_cloud_id=ge_cloud_id
@@ -2100,6 +2101,7 @@ class BaseDataContext:
                     )
                 )
         else:
+            print("this is the path that we are going")
             key: ExpectationSuiteIdentifier = ExpectationSuiteIdentifier(
                 expectation_suite_name=expectation_suite_name
             )
@@ -2111,7 +2113,10 @@ class BaseDataContext:
                     )
                 )
 
+        # temporarily set data_context ref so entire object is not serialized
+        expectation_suite.set_data_context_ref(data_context=None)
         self.expectations_store.set(key, expectation_suite, **kwargs)
+        expectation_suite.set_data_context_ref(data_context=self)
         return expectation_suite
 
     def delete_expectation_suite(
@@ -2166,7 +2171,9 @@ class BaseDataContext:
             )
 
         if self.expectations_store.has_key(key):
-            return self.expectations_store.get(key)
+            expectation_suite: ExpectationSuite = self.expectations_store.get(key)
+            expectation_suite.set_data_context_ref(data_context=self)
+            return expectation_suite
         else:
             raise ge_exceptions.DataContextError(
                 "expectation_suite %s not found" % expectation_suite_name
@@ -2243,7 +2250,14 @@ class BaseDataContext:
                 )
 
         self._evaluation_parameter_dependencies_compiled = False
-        return self.expectations_store.set(key, expectation_suite, **kwargs)
+        if isinstance(expectation_suite, ExpectationSuite):
+            expectation_suite.set_data_context_ref(data_context=None)
+        expectation_suite: ExpectationSuite = self.expectations_store.set(
+            key, expectation_suite, **kwargs
+        )
+        if isinstance(expectation_suite, ExpectationSuite):
+            expectation_suite.set_data_context_ref(data_context=self)
+        return expectation_suite
 
     def _store_metrics(self, requested_metrics, validation_results, target_store_name):
         """

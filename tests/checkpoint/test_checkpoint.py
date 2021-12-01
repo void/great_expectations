@@ -309,6 +309,7 @@ def test_basic_checkpoint_config_validation(
     assert len(context.list_checkpoints()) == 0
 
 
+# <WILL> HERE IS THE FIX
 @mock.patch(
     "great_expectations.core.usage_statistics.usage_statistics.UsageStatisticsHandler.emit"
 )
@@ -1654,13 +1655,16 @@ def test_newstyle_checkpoint_raise_error_when_run_when_missing_batch_request_and
         checkpoint.run()
 
 
+# test that we want to ensure pases
 def test_newstyle_checkpoint_instantiates_and_produces_a_validation_result_when_run_runtime_batch_request_query_in_top_level_batch_request(
     data_context_with_datasource_sqlalchemy_engine, sa
 ):
     context: DataContext = data_context_with_datasource_sqlalchemy_engine
 
     # create expectation suite
-    context.create_expectation_suite("my_expectation_suite")
+    context.create_expectation_suite(
+        expectation_suite_name="my_expectation_suite", data_context=context
+    )
 
     # RuntimeBatchRequest with a query
     batch_request = RuntimeBatchRequest(

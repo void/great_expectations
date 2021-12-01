@@ -1,4 +1,6 @@
 import datetime
+
+# import importlib
 import json
 import logging
 import uuid
@@ -50,6 +52,7 @@ class ExpectationSuite(SerializableDictDot):
     def __init__(
         self,
         expectation_suite_name,
+        data_context=None,
         expectations=None,
         evaluation_parameters=None,
         data_asset_type=None,
@@ -58,6 +61,7 @@ class ExpectationSuite(SerializableDictDot):
         ge_cloud_id=None,
     ):
         self.expectation_suite_name = expectation_suite_name
+        self.data_context = data_context  # new param
         self.ge_cloud_id = ge_cloud_id
         if expectations is None:
             expectations = []
@@ -176,7 +180,12 @@ class ExpectationSuite(SerializableDictDot):
     def __str__(self):
         return json.dumps(self.to_json_dict(), indent=2)
 
+    def set_data_context_ref(self, data_context=None):
+        self.data_context = data_context
+
     def to_json_dict(self):
+        # set this first
+        self.data_context = None
         myself = expectationSuiteSchema.dump(self)
         # NOTE - JPC - 20191031: migrate to expectation-specific schemas that subclass result with properly-typed
         # schemas to get serialization all-the-way down via dump
@@ -648,6 +657,8 @@ class ExpectationSuiteSchema(Schema):
     # noinspection PyUnusedLocal
     @post_load
     def make_expectation_suite(self, data, **kwargs):
+        # if data_context in **kwargs
+        # then we loaded it into ExpectationSuite too
         return ExpectationSuite(**data)
 
 

@@ -192,6 +192,17 @@ def test_get_new_expectation_suite(data_context_parameterized_expectation_suite)
     assert len(expectation_suite.expectations) == 0
 
 
+def test_add_expectation_to_expectation_suite(empty_data_context_stats_enabled):
+    expectation_suite = empty_data_context_stats_enabled.create_expectation_suite(
+        "this_data_asset_config_does_not_exist.default"
+    )
+    expectation_suite.add_expectation(
+        ExpectationConfiguration(
+            expectation_type="expect_table_row_count_to_equal", kwargs={"value": 10}
+        )
+    )
+
+
 def test_save_expectation_suite(data_context_parameterized_expectation_suite):
     expectation_suite = (
         data_context_parameterized_expectation_suite.create_expectation_suite(

@@ -1025,8 +1025,10 @@ set as active.
              copy of _expectation_suite, not the original object.
         """
 
+        self._expectation_suite.set_data_context_ref(data_context=None)
         expectation_suite = copy.deepcopy(self._expectation_suite)
         expectations = expectation_suite.expectations
+        self._expectation_suite.set_data_context_ref(data_context=self._data_context)
 
         discards = defaultdict(int)
 
@@ -1659,7 +1661,9 @@ set as active.
             if isinstance(expectation_suite, dict):
                 expectation_suite = expectationSuiteSchema.load(expectation_suite)
             else:
+                expectation_suite.set_data_context_ref(data_context=None)
                 expectation_suite = copy.deepcopy(expectation_suite)
+                expectation_suite.set_data_context_ref(data_context=self._data_context)
             self._expectation_suite = expectation_suite
 
             if expectation_suite_name is not None:
@@ -1679,7 +1683,8 @@ set as active.
             if expectation_suite_name is None:
                 expectation_suite_name = "default"
             self._expectation_suite = ExpectationSuite(
-                expectation_suite_name=expectation_suite_name
+                expectation_suite_name=expectation_suite_name,
+                data_context=self._data_context,
             )
 
         self._expectation_suite.execution_engine_type = type(
@@ -1777,7 +1782,7 @@ class BridgeValidator:
                 raise ValueError(
                     "PandasDataset expectation_engine requires a Pandas Dataframe for its batch"
                 )
-
+            self.expectation_suite.set_data_context_ref(data_context=None)
             return self.expectation_engine(
                 self.batch.data,
                 expectation_suite=self.expectation_suite,
