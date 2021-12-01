@@ -646,6 +646,7 @@ class ExpectationSuiteSchema(Schema):
     # noinspection PyUnusedLocal
     @pre_dump
     def prepare_dump(self, data, **kwargs):
+        # possibly add removing data_context? is this necessary?
         data = deepcopy(data)
         if isinstance(data, ExpectationSuite):
             data.meta = convert_to_json_serializable(data.meta)

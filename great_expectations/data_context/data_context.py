@@ -2085,6 +2085,7 @@ class BaseDataContext:
         if not isinstance(overwrite_existing, bool):
             raise ValueError("Parameter overwrite_existing must be of type BOOL")
 
+        # DataContext as parameter makes it easier to Mock / test later
         expectation_suite: ExpectationSuite = ExpectationSuite(
             expectation_suite_name=expectation_suite_name, data_context=self
         )
@@ -2115,13 +2116,13 @@ class BaseDataContext:
 
         # temporarily set data_context ref so entire object is not serialized
         # what would be a situation where this is a string rather than an ExpectationSuite object?
-        if isinstance(expectation_suite, ExpectationSuite):
-            expectation_suite.set_data_context_ref(data_context=None)
-        expectation_suite: ExpectationSuite = self.expectations_store.set(
-            key, expectation_suite, **kwargs
-        )
-        if isinstance(expectation_suite, ExpectationSuite):
-            expectation_suite.set_data_context_ref(data_context=self)
+        # if isinstance(expectation_suite, ExpectationSuite):
+        # TODO : this is ugly and give me an uncomfortable feeling. Do it better
+        expectation_suite.set_data_context_ref(data_context=None)
+        self.expectations_store.set(key, expectation_suite, **kwargs)
+        # if isinstance(expectation_suite, ExpectationSuite):
+        #     expectation_suite.set_data_context_ref(data_context=self)
+        expectation_suite.set_data_context_ref(data_context=self)
         return expectation_suite
 
     def delete_expectation_suite(
