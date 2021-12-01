@@ -2114,9 +2114,14 @@ class BaseDataContext:
                 )
 
         # temporarily set data_context ref so entire object is not serialized
-        expectation_suite.set_data_context_ref(data_context=None)
-        self.expectations_store.set(key, expectation_suite, **kwargs)
-        expectation_suite.set_data_context_ref(data_context=self)
+        # what would be a situation where this is a string rather than an ExpectationSuite object?
+        if isinstance(expectation_suite, ExpectationSuite):
+            expectation_suite.set_data_context_ref(data_context=None)
+        expectation_suite: ExpectationSuite = self.expectations_store.set(
+            key, expectation_suite, **kwargs
+        )
+        if isinstance(expectation_suite, ExpectationSuite):
+            expectation_suite.set_data_context_ref(data_context=self)
         return expectation_suite
 
     def delete_expectation_suite(
@@ -2232,6 +2237,9 @@ class BaseDataContext:
                     )
                 )
         else:
+            if isinstance(expectation_suite, str):
+                raise Exception(expectation_suite)
+            # str object has no attribute : expectation_suite_name
             if expectation_suite_name is None:
                 key: ExpectationSuiteIdentifier = ExpectationSuiteIdentifier(
                     expectation_suite_name=expectation_suite.expectation_suite_name
@@ -2949,7 +2957,7 @@ class BaseDataContext:
                     + "."
                     + profiler.__name__
                 )
-
+        # Marker
         self.create_expectation_suite(
             expectation_suite_name=expectation_suite_name, overwrite_existing=True
         )
