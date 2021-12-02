@@ -1025,10 +1025,10 @@ set as active.
              copy of _expectation_suite, not the original object.
         """
 
-        self._expectation_suite.set_data_context_ref(data_context=None)
+        # self._expectation_suite.set_data_context_ref(data_context=None)
         expectation_suite = copy.deepcopy(self._expectation_suite)
         expectations = expectation_suite.expectations
-        self._expectation_suite.set_data_context_ref(data_context=self._data_context)
+        # self._expectation_suite.set_data_context_ref(data_context=self._data_context)
 
         discards = defaultdict(int)
 

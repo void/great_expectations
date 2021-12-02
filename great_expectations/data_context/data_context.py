@@ -2173,7 +2173,7 @@ class BaseDataContext:
 
         if self.expectations_store.has_key(key):
             expectation_suite: ExpectationSuite = self.expectations_store.get(key)
-            expectation_suite.set_data_context_ref(data_context=self)
+            # expectation_suite.set_data_context_ref(data_context=self)
             return expectation_suite
         else:
             raise ge_exceptions.DataContextError(
@@ -2254,13 +2254,11 @@ class BaseDataContext:
                 )
 
         self._evaluation_parameter_dependencies_compiled = False
-        if isinstance(expectation_suite, ExpectationSuite):
-            expectation_suite.set_data_context_ref(data_context=None)
-        expectation_suite: ExpectationSuite = self.expectations_store.set(
-            key, expectation_suite, **kwargs
-        )
-        if isinstance(expectation_suite, ExpectationSuite):
-            expectation_suite.set_data_context_ref(data_context=self)
+        # if isinstance(expectation_suite, ExpectationSuite):
+        #     expectation_suite.set_data_context_ref(data_context=None)
+        self.expectations_store.set(key, expectation_suite, **kwargs)
+        # if isinstance(expectation_suite, ExpectationSuite):
+        #     expectation_suite.set_data_context_ref(data_context=self)
         return expectation_suite
 
     def _store_metrics(self, requested_metrics, validation_results, target_store_name):

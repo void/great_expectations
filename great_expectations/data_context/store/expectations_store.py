@@ -170,6 +170,10 @@ class ExpectationsStore(Store):
         return self.store_backend.remove_key(key)
 
     def serialize(self, key, value):
+        # <WILL> Hail mary
+        print("!!")
+        if hasattr(value, "data_context"):
+            value.data_context = None
         if self.ge_cloud_mode:
             # GeCloudStoreBackend expects a json str
             return self._expectationSuiteSchema.dump(value)
