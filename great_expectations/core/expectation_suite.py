@@ -2,8 +2,6 @@ import datetime
 import json
 import logging
 import uuid
-
-# from copy import deepcopy
 from copy import deepcopy
 from typing import Any, Dict, List, Optional, Tuple, Union
 
@@ -36,6 +34,7 @@ from great_expectations.marshmallow__shade import (
     pre_dump,
 )
 from great_expectations.types import SerializableDictDot
+from great_expectations.types.base import DotDict
 
 logger = logging.getLogger(__name__)
 
@@ -180,16 +179,25 @@ class ExpectationSuite(SerializableDictDot):
     def __str__(self):
         return json.dumps(self.to_json_dict(), indent=2)
 
-    # this can be over written
-    def __deepcopy__(self, memodict={}):
-        pass
-
-    # this is
+    def __deepcopy__(self, memo):
+        attributes = [
+            "expectation_suite_name",
+            "ge_cloud_id",
+            "expectations",
+            "evaluation_parameters",
+            "data_asset_type",
+            "meta",
+        ]
+        copied_dict = DotDict()
+        for k in attributes:
+            setattr(copied_dict, k, getattr(self, k))
+        return copied_dict
 
     def to_json_dict(self):
         # remove data_context reference before converting to JSON
         self.data_context = None
         myself = expectationSuiteSchema.dump(self)
+        myself.pop("data_context")
         # NOTE - JPC - 20191031: migrate to expectation-specific schemas that subclass result with properly-typed
         # schemas to get serialization all-the-way down via dump
         myself["expectations"] = convert_to_json_serializable(myself["expectations"])
@@ -616,7 +624,6 @@ class ExpectationSuiteSchema(Schema):
     evaluation_parameters = fields.Dict(allow_none=True)
     data_asset_type = fields.Str(allow_none=True)
     meta = fields.Dict()
-    # data_context = fields.Dict(allow_none=True)
 
     # NOTE: 20191107 - JPC - we may want to remove clean_empty and update tests to require the other fields;
     # doing so could also allow us not to have to make a copy of data in the pre_dump method.
@@ -650,10 +657,6 @@ class ExpectationSuiteSchema(Schema):
     # noinspection PyUnusedLocal
     @pre_dump
     def prepare_dump(self, data, **kwargs):
-        if isinstance(data, ExpectationSuite):
-            data.data_context = None
-        elif isinstance(data, dict):
-            data.pop("data_context")
         data = deepcopy(data)
         if isinstance(data, ExpectationSuite):
             data.meta = convert_to_json_serializable(data.meta)
@@ -668,5 +671,4 @@ class ExpectationSuiteSchema(Schema):
         return ExpectationSuite(**data)
 
 
-# expectationSuiteSchema = ExpectationSuiteSchema(exclude=["data_context"])
 expectationSuiteSchema = ExpectationSuiteSchema()

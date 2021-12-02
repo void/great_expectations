@@ -2937,9 +2937,9 @@ class BaseDataContext:
                     + "."
                     + profiler.__name__
                 )
-        self.create_expectation_suite(
-            expectation_suite_name=expectation_suite_name, overwrite_existing=True
-        )
+            self.create_expectation_suite(
+                expectation_suite_name=expectation_suite_name, overwrite_existing=True
+            )
 
         # TODO: Add batch_parameters
         batch = self.get_batch(

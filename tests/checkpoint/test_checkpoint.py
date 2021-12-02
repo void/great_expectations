@@ -1062,6 +1062,7 @@ def test_legacy_checkpoint_instantiates_and_produces_a_validation_result_when_ru
     }
 
     checkpoint_config_dict = {
+        "name": "my_checkpoint",
         "validation_operator_name": "action_list_operator",
         "batches": [
             {"batch_kwargs": batch_kwargs, "expectation_suite_names": ["my_suite"]}
