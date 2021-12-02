@@ -1025,10 +1025,8 @@ set as active.
              copy of _expectation_suite, not the original object.
         """
 
-        # self._expectation_suite.set_data_context_ref(data_context=None)
         expectation_suite = copy.deepcopy(self._expectation_suite)
         expectations = expectation_suite.expectations
-        # self._expectation_suite.set_data_context_ref(data_context=self._data_context)
 
         discards = defaultdict(int)
 
@@ -1661,7 +1659,6 @@ set as active.
             if isinstance(expectation_suite, dict):
                 expectation_suite = expectationSuiteSchema.load(expectation_suite)
             else:
-                # <WILL> MARKER
                 expectation_suite = copy.deepcopy(expectation_suite)
             self._expectation_suite = expectation_suite
 
@@ -1781,7 +1778,6 @@ class BridgeValidator:
                 raise ValueError(
                     "PandasDataset expectation_engine requires a Pandas Dataframe for its batch"
                 )
-            # self.expectation_suite.set_data_context_ref(data_context=None)
             return self.expectation_engine(
                 self.batch.data,
                 expectation_suite=self.expectation_suite,

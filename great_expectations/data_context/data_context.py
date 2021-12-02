@@ -2085,11 +2085,9 @@ class BaseDataContext:
         if not isinstance(overwrite_existing, bool):
             raise ValueError("Parameter overwrite_existing must be of type BOOL")
 
-        # DataContext as parameter makes it easier to Mock / test later
         expectation_suite: ExpectationSuite = ExpectationSuite(
             expectation_suite_name=expectation_suite_name, data_context=self
         )
-        # are we setting things correctly?
         if self.ge_cloud_mode:
             key: GeCloudIdentifier = GeCloudIdentifier(
                 resource_type="expectation_suite", ge_cloud_id=ge_cloud_id
@@ -2102,7 +2100,6 @@ class BaseDataContext:
                     )
                 )
         else:
-            # print("this is the path that we are going")
             key: ExpectationSuiteIdentifier = ExpectationSuiteIdentifier(
                 expectation_suite_name=expectation_suite_name
             )
@@ -2113,10 +2110,6 @@ class BaseDataContext:
                         expectation_suite_name
                     )
                 )
-
-        # temporarily set data_context ref so entire object is not serialized
-        # what would be a situation where this is a string rather than an ExpectationSuite object?
-        # TODO : this is ugly and give me an uncomfortable feeling. Do it better
         self.expectations_store.set(key, expectation_suite, **kwargs)
         return expectation_suite
 
@@ -2234,9 +2227,6 @@ class BaseDataContext:
                     )
                 )
         else:
-            if isinstance(expectation_suite, str):
-                raise Exception(expectation_suite)
-            # str object has no attribute : expectation_suite_name
             if expectation_suite_name is None:
                 key: ExpectationSuiteIdentifier = ExpectationSuiteIdentifier(
                     expectation_suite_name=expectation_suite.expectation_suite_name
@@ -2255,12 +2245,7 @@ class BaseDataContext:
                 )
 
         self._evaluation_parameter_dependencies_compiled = False
-        # if isinstance(expectation_suite, ExpectationSuite):
-        #     expectation_suite.set_data_context_ref(data_context=None)
-        self.expectations_store.set(key, expectation_suite, **kwargs)
-        # if isinstance(expectation_suite, ExpectationSuite):
-        #     expectation_suite.set_data_context_ref(data_context=self)
-        return expectation_suite
+        return self.expectations_store.set(key, expectation_suite, **kwargs)
 
     def _store_metrics(self, requested_metrics, validation_results, target_store_name):
         """
@@ -2952,7 +2937,6 @@ class BaseDataContext:
                     + "."
                     + profiler.__name__
                 )
-        # Marker
         self.create_expectation_suite(
             expectation_suite_name=expectation_suite_name, overwrite_existing=True
         )

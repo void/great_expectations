@@ -309,7 +309,6 @@ def test_basic_checkpoint_config_validation(
     assert len(context.list_checkpoints()) == 0
 
 
-# <WILL> HERE IS THE FIX
 @mock.patch(
     "great_expectations.core.usage_statistics.usage_statistics.UsageStatisticsHandler.emit"
 )
@@ -1063,7 +1062,6 @@ def test_legacy_checkpoint_instantiates_and_produces_a_validation_result_when_ru
     }
 
     checkpoint_config_dict = {
-        "name": "my_checkpoint",
         "validation_operator_name": "action_list_operator",
         "batches": [
             {"batch_kwargs": batch_kwargs, "expectation_suite_names": ["my_suite"]}
@@ -1655,7 +1653,6 @@ def test_newstyle_checkpoint_raise_error_when_run_when_missing_batch_request_and
         checkpoint.run()
 
 
-# test that we want to ensure pases
 def test_newstyle_checkpoint_instantiates_and_produces_a_validation_result_when_run_runtime_batch_request_query_in_top_level_batch_request(
     data_context_with_datasource_sqlalchemy_engine, sa
 ):
@@ -1664,53 +1661,53 @@ def test_newstyle_checkpoint_instantiates_and_produces_a_validation_result_when_
     # create expectation suite
     context.create_expectation_suite(expectation_suite_name="my_expectation_suite")
 
-    # # RuntimeBatchRequest with a query
-    # batch_request = RuntimeBatchRequest(
-    #     **{
-    #         "datasource_name": "my_datasource",
-    #         "data_connector_name": "default_runtime_data_connector_name",
-    #         "data_asset_name": "default_data_asset_name",
-    #         "batch_identifiers": {"default_identifier_name": "test_identifier"},
-    #         "runtime_parameters": {
-    #             "query": "SELECT * from table_partitioned_by_date_column__A LIMIT 10"
-    #         },
-    #     }
-    # )
-    #
-    # # add checkpoint config
-    # checkpoint = Checkpoint(
-    #     name="my_checkpoint",
-    #     data_context=context,
-    #     config_version=1,
-    #     run_name_template="%Y-%M-foo-bar-template",
-    #     expectation_suite_name="my_expectation_suite",
-    #     action_list=[
-    #         {
-    #             "name": "store_validation_result",
-    #             "action": {
-    #                 "class_name": "StoreValidationResultAction",
-    #             },
-    #         },
-    #         {
-    #             "name": "store_evaluation_params",
-    #             "action": {
-    #                 "class_name": "StoreEvaluationParametersAction",
-    #             },
-    #         },
-    #         {
-    #             "name": "update_data_docs",
-    #             "action": {
-    #                 "class_name": "UpdateDataDocsAction",
-    #             },
-    #         },
-    #     ],
-    #     batch_request=batch_request,
-    # )
-    #
-    # results = checkpoint.run()
-    #
-    # assert len(context.validations_store.list_keys()) == 1
-    # assert results["success"] == True
+    # RuntimeBatchRequest with a query
+    batch_request = RuntimeBatchRequest(
+        **{
+            "datasource_name": "my_datasource",
+            "data_connector_name": "default_runtime_data_connector_name",
+            "data_asset_name": "default_data_asset_name",
+            "batch_identifiers": {"default_identifier_name": "test_identifier"},
+            "runtime_parameters": {
+                "query": "SELECT * from table_partitioned_by_date_column__A LIMIT 10"
+            },
+        }
+    )
+
+    # add checkpoint config
+    checkpoint = Checkpoint(
+        name="my_checkpoint",
+        data_context=context,
+        config_version=1,
+        run_name_template="%Y-%M-foo-bar-template",
+        expectation_suite_name="my_expectation_suite",
+        action_list=[
+            {
+                "name": "store_validation_result",
+                "action": {
+                    "class_name": "StoreValidationResultAction",
+                },
+            },
+            {
+                "name": "store_evaluation_params",
+                "action": {
+                    "class_name": "StoreEvaluationParametersAction",
+                },
+            },
+            {
+                "name": "update_data_docs",
+                "action": {
+                    "class_name": "UpdateDataDocsAction",
+                },
+            },
+        ],
+        batch_request=batch_request,
+    )
+
+    results = checkpoint.run()
+
+    assert len(context.validations_store.list_keys()) == 1
+    assert results["success"] == True
 
 
 def test_newstyle_checkpoint_instantiates_and_produces_a_validation_result_when_run_runtime_batch_request_batch_data_in_top_level_batch_request_pandas(

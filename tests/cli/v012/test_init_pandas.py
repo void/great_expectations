@@ -476,7 +476,6 @@ def test_init_on_existing_project_with_datasource_with_no_suite_create_one(
     assert_no_logging_messages_or_tracebacks(caplog, result)
 
 
-# TEST 1
 def test_cli_init_on_new_project_with_broken_excel_file_without_trying_again(
     caplog, tmp_path_factory
 ):
@@ -495,7 +494,6 @@ def test_cli_init_on_new_project_with_broken_excel_file_without_trying_again(
         catch_exceptions=False,
     )
     stdout = result.output
-    # print(stdout)
     assert len(stdout) < 6000, "CLI output is unreasonably long."
     assert "Always know what to expect from your data" in stdout
     assert "What data would you like Great Expectations to connect to" in stdout

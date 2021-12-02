@@ -530,7 +530,6 @@ def test_checkpoint_run_on_checkpoint_with_not_found_suite_raises_error_with_ge_
     )
 
 
-# this is where we need to fix
 @mock.patch(
     "great_expectations.core.usage_statistics.usage_statistics.UsageStatisticsHandler.emit"
 )
