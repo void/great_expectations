@@ -194,10 +194,7 @@ class ExpectationSuite(SerializableDictDot):
         return copied_dict
 
     def to_json_dict(self):
-        # remove data_context reference before converting to JSON
-        self.data_context = None
         myself = expectationSuiteSchema.dump(self)
-        myself.pop("data_context")
         # NOTE - JPC - 20191031: migrate to expectation-specific schemas that subclass result with properly-typed
         # schemas to get serialization all-the-way down via dump
         myself["expectations"] = convert_to_json_serializable(myself["expectations"])

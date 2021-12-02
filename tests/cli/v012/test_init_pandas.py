@@ -530,7 +530,6 @@ def test_cli_init_on_new_project_with_broken_excel_file_without_trying_again(
     assert_no_logging_messages_or_tracebacks(caplog, result)
 
 
-# Test 2
 @pytest.mark.filterwarnings(
     "ignore:DataAsset.remove_expectations*:DeprecationWarning:great_expectations.data_asset"
 )
@@ -559,7 +558,6 @@ def test_cli_init_on_new_project_with_broken_excel_file_try_again_with_different
         catch_exceptions=False,
     )
     stdout = result.output
-    # print(stdout)
     assert mock_webbrowser.call_count == 1
     assert (
         "{}/great_expectations/uncommitted/data_docs/local_site/validations/Titanic/warning/".format(

@@ -363,10 +363,8 @@ class DataAsset:
         """
         if expectation_suite is not None:
             if isinstance(expectation_suite, dict):
-                expectation_suite.pop("data_context")
                 expectation_suite = expectationSuiteSchema.load(expectation_suite)
             else:
-                expectation_suite.data_context = None
                 expectation_suite = copy.deepcopy(expectation_suite)
             self._expectation_suite = expectation_suite
 
@@ -388,6 +386,7 @@ class DataAsset:
                 expectation_suite_name = "default"
             self._expectation_suite = ExpectationSuite(
                 expectation_suite_name=expectation_suite_name,
+                # data_context=self._data_context
             )
 
         self._expectation_suite.data_asset_type = self._data_asset_type

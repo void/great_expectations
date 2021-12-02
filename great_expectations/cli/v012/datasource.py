@@ -1358,7 +1358,8 @@ Would you like to continue?"""
         BridgeValidator(
             batch=datasource.get_batch(batch_kwargs),
             expectation_suite=ExpectationSuite(
-                expectation_suite_name="throwaway", data_context=context
+                # expectation_suite_name="throwaway", data_context=context
+                expectation_suite_name="throwaway"
             ),
         ).get_dataset()
 
