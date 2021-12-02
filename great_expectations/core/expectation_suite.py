@@ -4,7 +4,8 @@ import datetime
 import json
 import logging
 import uuid
-from copy import deepcopy
+
+# from copy import deepcopy
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import great_expectations as ge
@@ -611,6 +612,7 @@ class ExpectationSuiteSchema(Schema):
     evaluation_parameters = fields.Dict(allow_none=True)
     data_asset_type = fields.Str(allow_none=True)
     meta = fields.Dict()
+    data_context = fields.Dict(allow_none=True)
 
     # NOTE: 20191107 - JPC - we may want to remove clean_empty and update tests to require the other fields;
     # doing so could also allow us not to have to make a copy of data in the pre_dump method.
@@ -645,12 +647,11 @@ class ExpectationSuiteSchema(Schema):
     # the problem is that this is called too much. It's not that we are
     @pre_dump
     def prepare_dump(self, data, **kwargs):
-        if isinstance(data, ExpectationSuite):
-            data.data_context = None
-        elif isinstance(data, dict):
-            data.pop("data_context")
-        # add eilminate
-        data = deepcopy(data)
+        # if isinstance(data, ExpectationSuite):
+        #     data.data_context = None
+        # elif isinstance(data, dict):
+        #     data.pop("data_context")
+        # data = deepcopy(data)
         if isinstance(data, ExpectationSuite):
             data.meta = convert_to_json_serializable(data.meta)
         elif isinstance(data, dict):
@@ -667,4 +668,4 @@ class ExpectationSuiteSchema(Schema):
         return ExpectationSuite(**data)
 
 
-expectationSuiteSchema = ExpectationSuiteSchema()
+expectationSuiteSchema = ExpectationSuiteSchema(exclude=["data_context"])

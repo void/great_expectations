@@ -2173,7 +2173,8 @@ class BaseDataContext:
 
         if self.expectations_store.has_key(key):
             expectation_suite: ExpectationSuite = self.expectations_store.get(key)
-            # expectation_suite.set_data_context_ref(data_context=self)
+            # set the reference to data_context before returning
+            expectation_suite.data_context = self
             return expectation_suite
         else:
             raise ge_exceptions.DataContextError(
