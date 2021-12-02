@@ -180,13 +180,11 @@ class ExpectationSuite(SerializableDictDot):
     def __str__(self):
         return json.dumps(self.to_json_dict(), indent=2)
 
-    def set_data_context_ref(self, data_context=None):
-        self.data_context = data_context
-
     def to_json_dict(self):
         # set this first
         self.data_context = None
         myself = expectationSuiteSchema.dump(self)
+        print(myself)
         # NOTE - JPC - 20191031: migrate to expectation-specific schemas that subclass result with properly-typed
         # schemas to get serialization all-the-way down via dump
         myself["expectations"] = convert_to_json_serializable(myself["expectations"])
@@ -644,8 +642,12 @@ class ExpectationSuiteSchema(Schema):
         return data
 
     # noinspection PyUnusedLocal
+    # the problem is that this is called too much. It's not that we are
     @pre_dump
     def prepare_dump(self, data, **kwargs):
+        # this is just to work
+        print("python")
+        print(data)
         # possibly add removing data_context? is this necessary?
         data = deepcopy(data)
         if isinstance(data, ExpectationSuite):

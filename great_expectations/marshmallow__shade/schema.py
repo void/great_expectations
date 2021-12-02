@@ -583,6 +583,8 @@ class Schema(base.SchemaABC, metaclass=SchemaMeta):
             A :exc:`ValidationError <marshmallow.exceptions.ValidationError>` is raised
             if ``obj`` is invalid.
         """
+
+        print("dump")
         serialized = self.dump(obj, many=many)
 
         def datetime_serializer(o):
