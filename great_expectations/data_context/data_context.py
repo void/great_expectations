@@ -2102,7 +2102,7 @@ class BaseDataContext:
                     )
                 )
         else:
-            print("this is the path that we are going")
+            # print("this is the path that we are going")
             key: ExpectationSuiteIdentifier = ExpectationSuiteIdentifier(
                 expectation_suite_name=expectation_suite_name
             )

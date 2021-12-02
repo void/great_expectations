@@ -586,7 +586,7 @@ class Schema(base.SchemaABC, metaclass=SchemaMeta):
             if ``obj`` is invalid.
         """
 
-        print("dump")
+        # print("dump")
         serialized = self.dump(obj, many=many)
 
         def datetime_serializer(o):

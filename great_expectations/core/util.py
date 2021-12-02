@@ -141,7 +141,7 @@ def convert_to_json_serializable(data):
     # If it's one of our types, we use our own conversion; this can move to full schema
     # once nesting goes all the way down
     if isinstance(data, (SerializableDictDot, SerializableDotDict)):
-        print("this is working so far")
+        # print("this is working so far")
         return data.to_json_dict()
 
     # Handling "float(nan)" separately is required by Python-3.6 and Pandas-0.23 versions.
