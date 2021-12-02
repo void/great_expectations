@@ -1661,9 +1661,8 @@ set as active.
             if isinstance(expectation_suite, dict):
                 expectation_suite = expectationSuiteSchema.load(expectation_suite)
             else:
-                expectation_suite.set_data_context_ref(data_context=None)
+                # <WILL> MARKER
                 expectation_suite = copy.deepcopy(expectation_suite)
-                expectation_suite.set_data_context_ref(data_context=self._data_context)
             self._expectation_suite = expectation_suite
 
             if expectation_suite_name is not None:
