@@ -495,7 +495,7 @@ def test_cli_init_on_new_project_with_broken_excel_file_without_trying_again(
         catch_exceptions=False,
     )
     stdout = result.output
-
+    # print(stdout)
     assert len(stdout) < 6000, "CLI output is unreasonably long."
     assert "Always know what to expect from your data" in stdout
     assert "What data would you like Great Expectations to connect to" in stdout
@@ -509,10 +509,7 @@ def test_cli_init_on_new_project_with_broken_excel_file_without_trying_again(
         "- Please check the file and try again or select a different data file."
         in stdout
     )
-    assert (
-        "- Error: Excel file format cannot be determined, you must specify an engine manually."
-        in stdout
-    ) or (
+    assert ("- Error: File is not a recognized excel file" in stdout) or (
         "Error: Unsupported format, or corrupt file: Expected BOF record; found b'PRODUCTI'"
         in stdout
     )
@@ -564,6 +561,7 @@ def test_cli_init_on_new_project_with_broken_excel_file_try_again_with_different
         catch_exceptions=False,
     )
     stdout = result.output
+    # print(stdout)
     assert mock_webbrowser.call_count == 1
     assert (
         "{}/great_expectations/uncommitted/data_docs/local_site/validations/Titanic/warning/".format(
@@ -585,10 +583,7 @@ def test_cli_init_on_new_project_with_broken_excel_file_try_again_with_different
         "- Please check the file and try again or select a different data file."
         in stdout
     )
-    assert (
-        "- Error: Excel file format cannot be determined, you must specify an engine manually."
-        in stdout
-    ) or (
+    assert ("- Error: File is not a recognized excel file" in stdout) or (
         "Error: Unsupported format, or corrupt file: Expected BOF record; found b'PRODUCTI'"
         in stdout
     )

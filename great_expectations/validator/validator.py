@@ -1781,7 +1781,7 @@ class BridgeValidator:
                 raise ValueError(
                     "PandasDataset expectation_engine requires a Pandas Dataframe for its batch"
                 )
-            self.expectation_suite.set_data_context_ref(data_context=None)
+            # self.expectation_suite.set_data_context_ref(data_context=None)
             return self.expectation_engine(
                 self.batch.data,
                 expectation_suite=self.expectation_suite,
