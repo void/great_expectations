@@ -476,6 +476,7 @@ def test_init_on_existing_project_with_datasource_with_no_suite_create_one(
     assert_no_logging_messages_or_tracebacks(caplog, result)
 
 
+# TEST 1
 def test_cli_init_on_new_project_with_broken_excel_file_without_trying_again(
     caplog, tmp_path_factory
 ):
@@ -534,6 +535,7 @@ def test_cli_init_on_new_project_with_broken_excel_file_without_trying_again(
     assert_no_logging_messages_or_tracebacks(caplog, result)
 
 
+# Test 2
 @pytest.mark.filterwarnings(
     "ignore:DataAsset.remove_expectations*:DeprecationWarning:great_expectations.data_asset"
 )

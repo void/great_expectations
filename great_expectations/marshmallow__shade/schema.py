@@ -552,6 +552,8 @@ class Schema(base.SchemaABC, metaclass=SchemaMeta):
         if many and is_iterable_but_not_string(obj):
             obj = list(obj)
 
+        # print("hello I am here")
+
         if self._has_processors(PRE_DUMP):
             processed_obj = self._invoke_dump_processors(
                 PRE_DUMP, obj, many=many, original_data=obj

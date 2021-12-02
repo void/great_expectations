@@ -63,6 +63,7 @@ class ExpectationSuite(SerializableDictDot):
         self.expectation_suite_name = expectation_suite_name
         self.data_context = data_context  # new param
         self.ge_cloud_id = ge_cloud_id
+        self.data_context = data_context
         if expectations is None:
             expectations = []
         self.expectations = [
@@ -645,10 +646,11 @@ class ExpectationSuiteSchema(Schema):
     # the problem is that this is called too much. It's not that we are
     @pre_dump
     def prepare_dump(self, data, **kwargs):
-        # this is just to work
-        print("python")
-        print(data)
-        # possibly add removing data_context? is this necessary?
+        if isinstance(data, ExpectationSuite):
+            data.data_context = None
+        elif isinstance(data, dict):
+            data.pop("data_context")
+        # add eilminate
         data = deepcopy(data)
         if isinstance(data, ExpectationSuite):
             data.meta = convert_to_json_serializable(data.meta)

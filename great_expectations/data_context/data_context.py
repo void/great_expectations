@@ -2087,7 +2087,7 @@ class BaseDataContext:
 
         # DataContext as parameter makes it easier to Mock / test later
         expectation_suite: ExpectationSuite = ExpectationSuite(
-            expectation_suite_name=expectation_suite_name
+            expectation_suite_name=expectation_suite_name, data_context=self
         )
         # are we setting things correctly?
         if self.ge_cloud_mode:
