@@ -63,7 +63,6 @@ class ExpectationSuite(SerializableDictDot):
         self.expectation_suite_name = expectation_suite_name
         self.data_context = data_context  # new param
         self.ge_cloud_id = ge_cloud_id
-        self.data_context = data_context
         if expectations is None:
             expectations = []
         self.expectations = [
@@ -664,6 +663,7 @@ class ExpectationSuiteSchema(Schema):
     def make_expectation_suite(self, data, **kwargs):
         # if data_context in **kwargs
         # then we loaded it into ExpectationSuite too
+        # TODO : ensure that ExpectationSuite has DataContext
         return ExpectationSuite(**data)
 
 

@@ -385,7 +385,8 @@ class DataAsset:
             if expectation_suite_name is None:
                 expectation_suite_name = "default"
             self._expectation_suite = ExpectationSuite(
-                expectation_suite_name=expectation_suite_name
+                expectation_suite_name=expectation_suite_name,
+                data_context=self._data_context,
             )
 
         self._expectation_suite.data_asset_type = self._data_asset_type

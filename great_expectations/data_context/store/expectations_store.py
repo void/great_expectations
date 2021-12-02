@@ -170,10 +170,6 @@ class ExpectationsStore(Store):
         return self.store_backend.remove_key(key)
 
     def serialize(self, key, value):
-        # <WILL> Hail mary
-        print("!!")
-        if hasattr(value, "data_context"):
-            value.data_context = None
         if self.ge_cloud_mode:
             # GeCloudStoreBackend expects a json str
             return self._expectationSuiteSchema.dump(value)
@@ -215,7 +211,7 @@ class ExpectationsStore(Store):
             )
         else:
             test_key: ExpectationSuiteIdentifier = self.key_class(test_key_name)
-        test_value = ExpectationSuite(test_key_name)
+        test_value = ExpectationSuite(expectation_suite_name=test_key_name)
 
         if pretty_print:
             print(f"Attempting to add a new test key: {test_key}...")
