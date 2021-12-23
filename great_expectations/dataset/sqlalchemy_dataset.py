@@ -159,6 +159,11 @@ try:
 except ImportError:
     teradatasqlalchemy = None
 
+    try:
+        import pyhive.sqlalchemy_presto as presto
+    except ImportError:
+        presto = None
+
 
 class SqlAlchemyBatchReference:
     def __init__(self, engine, table_name=None, schema=None, query=None):
@@ -609,6 +614,9 @@ class SqlAlchemyDataset(MetaSqlAlchemyDataset):
             self.dialect = import_library_module(
                 module_name="teradatasqlalchemy.dialect"
             )
+        elif dialect_name == "presto":
+            self.dialect = import_library_module("pyhive.sqlalchemy_presto")
+
         else:
             self.dialect = None
 
@@ -1399,6 +1407,7 @@ class SqlAlchemyDataset(MetaSqlAlchemyDataset):
         ###
 
         engine_dialect = self.sql_engine_dialect.name.lower()
+        print(engine_dialect)
         # handle cases where dialect.name.lower() returns a byte string (e.g. databricks)
         if isinstance(engine_dialect, bytes):
             engine_dialect = str(engine_dialect, "utf-8")
@@ -1441,7 +1450,7 @@ class SqlAlchemyDataset(MetaSqlAlchemyDataset):
             stmt = (
                 custom_sqlmod[0] + "into {table_name} from" + custom_sqlmod[1]
             ).format(table_name=table_name)
-        elif engine_dialect == "awsathena":
+        elif engine_dialect == "awsathena" or engine_dialect == "presto":
             stmt = "CREATE TABLE {table_name} AS {custom_sql}".format(
                 table_name=table_name, custom_sql=custom_sql
             )
